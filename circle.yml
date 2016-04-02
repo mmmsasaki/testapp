@@ -1,0 +1,22 @@
+machine:
+  timezone: Asia/Tokyo
+  services:
+    - docker
+  environment:
+    RAILS_ENV: test
+test:
+  override:
+    - echo "no test"
+deployment:
+  test:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker build -t mmmsasaki/testapp .
+      - docker push mmmsasaki/testapp
+      - sudo pip install awscli
+      - echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> config/aws/credentials
+      - echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> config/aws/credentials
+      - mv config/aws/config ~/.aws/
+      - mv config/aws/credentials ~/.aws/
+      - ./scripts/ecs-deploy -c default -n testapp_service -i mmmsasaki/testapp:latest
