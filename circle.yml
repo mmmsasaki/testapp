@@ -4,6 +4,9 @@ machine:
     - docker
   environment:
     RAILS_ENV: test
+database:
+  override:
+    - echo "no database"
 dependencies:
   override:
     - echo "no bundle install"
