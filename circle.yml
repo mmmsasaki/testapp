@@ -4,6 +4,9 @@ machine:
     - docker
   environment:
     RAILS_ENV: test
+dependencies:
+  override:
+    - echo "no bundle install"
 test:
   override:
     - echo "no test"
